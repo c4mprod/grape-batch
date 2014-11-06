@@ -8,7 +8,7 @@ RSpec.describe Grape::Batch::Base do
   let(:app) { Twitter::API.new }
   let(:stack) { Grape::Batch::Base.new(app) }
   let(:request) { Rack::MockRequest.new(stack) }
-  
+
   def encode(message)
     MultiJson.encode(message)
   end
@@ -131,7 +131,7 @@ RSpec.describe Grape::Batch::Base do
       describe '404 errors' do
         let(:request_body) { encode({requests: [{method: 'GET', path: '/api/v1/unknown'}]}) }
         it { expect(response.status).to eq(200) }
-        it { expect(response.body).to eq(encode([{code: 404, message: {error: '/api/v1/unknown not found'}}])) }
+        it { expect(response.body).to eq(encode([{code: 404, message: '/api/v1/unknown not found'}])) }
       end
     end
 
