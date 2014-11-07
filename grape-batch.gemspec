@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Lionel Oto', 'Cédric Darné']
   spec.email         = ['lionel.oto@c4mprod.com', 'cedric.darne@c4mprod.com']
   spec.summary       = %q{Extends Grape::API to support request batching }
-  spec.homepage      = ''
+  spec.homepage      = 'https://github.com/c4mprod/grape-batch'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")
