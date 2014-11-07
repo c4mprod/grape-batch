@@ -7,7 +7,7 @@ module Grape
           result = MultiJson.decode(body)
         end
 
-        (200..299).include?(status) ? {success: result} : {code: status, message: result['error']}
+        (200..299).include?(status) ? {success: result} : {code: status, error: result['error']}
       end
     end
   end
