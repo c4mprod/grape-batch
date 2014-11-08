@@ -28,10 +28,10 @@ module Grape
           body = MultiJson.encode(result)
         rescue Grape::Batch::RequestBodyError, Grape::Batch::TooManyRequestsError => e
           e.class == TooManyRequestsError ? status = 429 : status = 400
-          body = [e.message]
+          body = e.message
         end
 
-        [status, headers, body]
+        [status, headers, [body]]
       end
 
       private
