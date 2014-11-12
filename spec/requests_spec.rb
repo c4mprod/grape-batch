@@ -149,4 +149,28 @@ RSpec.describe Grape::Batch::Base do
       end
     end
   end
+
+  describe '#configure' do
+    it { expect(Grape::Batch.configuration).to_not be_nil }
+
+    describe 'default_value' do
+      it { expect(Grape::Batch.configuration.path).to eq('/batch') }
+      it { expect(Grape::Batch.configuration.formatter).to eq(Grape::Batch::Response) }
+      it { expect(Grape::Batch.configuration.limit).to eq(10) }
+    end
+
+    describe '.configure' do
+      before (:context) do
+        Grape::Batch.configure do |config|
+          config.path = '/custom_path'
+          config.limit = 15
+        end
+      end
+
+      describe 'default_value' do
+        it { expect(Grape::Batch.configuration.path).to eq('/custom_path') }
+        it { expect(Grape::Batch.configuration.limit).to eq(15) }
+      end
+    end
+  end
 end

@@ -1,3 +1,4 @@
+require 'grape/batch/configuration'
 require 'grape/batch/parser'
 require 'grape/batch/response'
 require 'grape/batch/version'
@@ -6,11 +7,9 @@ require 'multi_json'
 module Grape
   module Batch
     class Base
-      def initialize(app, opt = {})
+      def initialize(app)
         @app = app
-        @limit = opt[:limit] || 10
-        @path = opt[:path] || '/batch'
-        @response_klass = opt[:formatter] || Grape::Batch::Response
+        @response_klass = Grape::Batch.configuration.formatter
       end
 
       def call(env)
@@ -23,7 +22,7 @@ module Grape
         headers = {'Content-Type' => 'application/json'}
 
         begin
-          batch_requests = Grape::Batch::Validator::parse(env, @limit)
+          batch_requests = Grape::Batch::Validator::parse(env, Grape::Batch.configuration.limit)
           result = dispatch(env, batch_requests)
           body = MultiJson.encode(result)
         rescue Grape::Batch::RequestBodyError, Grape::Batch::TooManyRequestsError => e
@@ -37,7 +36,7 @@ module Grape
       private
 
       def is_batch_request?(env)
-        env['PATH_INFO'].start_with?(@path) &&
+        env['PATH_INFO'].start_with?(Grape::Batch.configuration.path) &&
             env['REQUEST_METHOD'] == 'POST' &&
             env['CONTENT_TYPE'] == 'application/json'
       end
