@@ -1,3 +1,4 @@
+require 'grape/batch/error'
 require 'grape/batch/parser'
 require 'grape/batch/response'
 require 'grape/batch/version'
