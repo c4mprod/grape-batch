@@ -5,8 +5,11 @@ require 'grape'
 require 'api'
 
 RSpec.describe Grape::Batch::Base do
-  let(:app) { Twitter::API.new }
-  let(:stack) { Grape::Batch::Base.new(app) }
+  before :context do
+    @app = Twitter::API.new
+  end
+
+  let(:stack) { Grape::Batch::Base.new(@app) }
   let(:request) { Rack::MockRequest.new(stack) }
 
   def encode(message)
@@ -18,6 +21,7 @@ RSpec.describe Grape::Batch::Base do
   end
 
   describe '/api' do
+
     describe 'GET /hello' do
       let(:response) { request.get('/api/v1/hello') }
 
@@ -146,6 +150,14 @@ RSpec.describe Grape::Batch::Base do
         let(:request_body) { encode({requests: [{method: 'POST', path: '/api/v1/status', body: {id: 856}}]}) }
         it { expect(response.status).to eq(200) }
         it { expect(response.body).to eq(encode([{success: 'status 856'}])) }
+      end
+    end
+
+    describe 'POST' do
+      context 'with multiple requests' do
+        let(:request_body) { encode({requests: [{method: 'POST', path: '/api/v1/hello'}, {method: 'GET', path: '/api/v1/user/856'}]}) }
+        it { expect(response.status).to eq(200) }
+        it { expect(decode(response.body).size).to eq(2) }
       end
     end
   end

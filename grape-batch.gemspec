@@ -6,8 +6,8 @@ require 'grape/batch/version'
 Gem::Specification.new do |spec|
   spec.name          = 'grape-batch'
   spec.version       = Grape::Batch::VERSION
-  spec.authors       = ['Lionel Oto', 'Cédric Darné']
-  spec.email         = ['lionel.oto@c4mprod.com', 'cedric.darne@c4mprod.com']
+  spec.authors       = ['Lionel Oto', 'Vincent Falduto', 'Cédric Darné']
+  spec.email         = ['lionel.oto@c4mprod.com', 'vincent.falduto@c4mprod.com', 'cedric.darne@c4mprod.com']
   spec.summary       = %q{Extends Grape::API to support request batching }
   spec.homepage      = 'https://github.com/c4mprod/grape-batch'
   spec.license       = 'MIT'
