@@ -3,7 +3,7 @@ module Grape
     class Validator
       class << self
         def parse(env, limit)
-          batch_body = decode_body(env['rack.input'])
+          batch_body = decode_body(env['rack.input'].read)
 
           requests = batch_body['requests']
           validate_requests(requests, limit)
