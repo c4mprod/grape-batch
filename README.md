@@ -2,6 +2,8 @@
 
 Rack middleware which extends Grape::API to support request batching.
 
+![Build status](https://travis-ci.org/c4mprod/grape-batch.svg?branch=master)
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -26,7 +28,7 @@ This middleware is intended to be used with JSON Grape::API only.
 ```ruby
 # grape-batch.rb
 Rails.application.configure do
- config.middleware.insert_before Rack::Sendfile, Grape::Batch::Base
+ config.middleware.use Grape::Batch::Base
 end
 ```
 
