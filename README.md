@@ -40,13 +40,21 @@ use Grape::Batch::Base
 ```
 
 ### Settings
-You can customize the middleware with a hash.
+Override any of these defaults in config/initializers/grape_batch.rb:
+
+```ruby
+Grape::Batch.configure do |config|
+  config.limit = 10
+  config.path = '/batch'
+  config.formatter = Grape::Batch::Response
+end
+```
 
 | Argument | Type | Default | Description
 | :---: | :---: | :---: | :---:
-| :limit | integer | 10 | Maximum number of batched requests allowed by the middleware
-| :path | string | /batch | Route on which the middleware is mounted on
-| :formatter | class | Grape::Batch::Response | The response formatter to use
+| limit | integer | 10 | Maximum number of batched requests allowed by the middleware
+| path | string | /batch | Route on which the middleware is mounted on
+| formatter | class | Grape::Batch::Response | The response formatter to use
 
 #### Response formatter
 #####Default format (success)
