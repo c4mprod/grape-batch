@@ -1,3 +1,4 @@
+require 'grape/batch/errors'
 require 'grape/batch/configuration'
 require 'grape/batch/parser'
 require 'grape/batch/response'
@@ -52,7 +53,7 @@ module Grape
           request_env['REQUEST_METHOD'] = method
           request_env['PATH_INFO'] = path
           if method == 'GET'
-            request_env['rack.input'] = StringIO.new(MultiJson.encode({}))
+            request_env['rack.input'] = StringIO.new('{}')
             request_env['QUERY_STRING'] = URI.encode_www_form(body.to_a)
           else
             request_env['rack.input'] = StringIO.new(MultiJson.encode(body))
