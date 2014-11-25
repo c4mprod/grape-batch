@@ -172,10 +172,12 @@ RSpec.describe Grape::Batch::Base do
     end
 
     describe '.configure' do
-      before (:context) do
-        Grape::Batch.configure do |config|
+      before do
+        allow(  Grape::Batch).to receive(:configuration) do
+          config = Grape::Batch::Configuration.new
           config.path = '/custom_path'
           config.limit = 15
+          config
         end
       end
 
