@@ -44,13 +44,18 @@ module Grape
       end
 
       def logger
-        @logger ||= Grape::Batch.configuration.logger || default_logger
+        @logger ||= Grape::Batch.configuration.logger || rails_logger || default_logger
       end
 
       def default_logger
         logger = Logger.new($stdout)
         logger.level = Logger::INFO
         logger
+      end
+
+      # Get the Rails logger if it's defined.
+      def rails_logger
+        defined?(::Rails) && ::Rails.respond_to?(:logger) && ::Rails.logger
       end
     end
   end
