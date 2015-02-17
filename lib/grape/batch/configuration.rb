@@ -1,12 +1,13 @@
 module Grape
   module Batch
     class Configuration
-      attr_accessor :path, :limit, :formatter
+      attr_accessor :path, :limit, :formatter, :logger
 
       def initialize
         @path  = '/batch'
         @limit = 10
         @formatter = Grape::Batch::Response
+        @logger = nil
       end
     end
 
