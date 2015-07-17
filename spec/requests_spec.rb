@@ -25,7 +25,6 @@ RSpec.describe Grape::Batch::Base do
   end
 
   describe '/api' do
-
     describe 'GET /hello' do
       let(:response) { request.get('/api/v1/hello') }
 
@@ -180,6 +179,7 @@ RSpec.describe Grape::Batch::Base do
           config = Grape::Batch::Configuration.new
           config.path = '/custom_path'
           config.limit = 15
+          config.session_proc = Proc.new { 3 + 2 }
           config
         end
       end
@@ -187,6 +187,7 @@ RSpec.describe Grape::Batch::Base do
       describe 'default_value' do
         it { expect(Grape::Batch.configuration.path).to eq('/custom_path') }
         it { expect(Grape::Batch.configuration.limit).to eq(15) }
+        it { expect(Grape::Batch.configuration.session_proc.call).to eq(5) }
       end
     end
   end

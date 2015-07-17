@@ -1,6 +1,5 @@
 require 'active_support'
 require 'grape/batch/log_subscriber'
-
 require 'grape/batch/version'
 require 'grape/batch/errors'
 require 'grape/batch/configuration'
@@ -49,10 +48,14 @@ module Grape
         ActiveSupport::Notifications.instrument 'dispatch.batch' do |event|
           event[:requests] = []
 
+          session_data = env[Grape::Batch.configuration.session_header]
+          env['api.session'] = Grape::Batch.configuration.session_proc.call(session_data)
+
           # iterate
+          batch_env = env.dup
           batch_requests.map do |request|
             # init env for Grape resource
-            tmp_env = prepare_tmp_env(env.dup, request)
+            tmp_env = prepare_tmp_env(batch_env, request)
             status, headers, response = @app.call(tmp_env)
 
             # format response
@@ -68,18 +71,20 @@ module Grape
         method = request['method']
         path = request['path']
         body = request['body'].is_a?(Hash) ? request['body'] : {}
+        query_string = ''
+        rack_input = '{}'
 
-        tmp_env.tap do |env|
-          env['REQUEST_METHOD'] = method
-          env['PATH_INFO'] = path
-
-          if method == 'GET'
-            env['rack.input'] = StringIO.new('{}')
-            env['QUERY_STRING'] = URI.encode_www_form(body.to_a)
-          else
-            env['rack.input'] = StringIO.new(MultiJson.encode(body))
-          end
+        if method == 'GET'
+          query_string = URI.encode_www_form(body.to_a)
+        else
+          rack_input = StringIO.new(MultiJson.encode(body))
         end
+
+        tmp_env['REQUEST_METHOD'] = method
+        tmp_env['PATH_INFO'] = path
+        tmp_env['QUERY_STRING'] = query_string
+        tmp_env['rack.input'] = rack_input
+        tmp_env
       end
     end
   end
