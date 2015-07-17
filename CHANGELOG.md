@@ -1,5 +1,8 @@
-# 1.1.3 (17th July 2015)
+# 1.1.4 (17th July 2015)
 * Added batch session
+
+# 1.1.3 (25th June 2015)
+* Fixed nested hash to url_encoded
 
 # 1.1.2 (17th February 2015)
 * Added logs

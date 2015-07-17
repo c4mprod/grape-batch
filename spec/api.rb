@@ -32,6 +32,15 @@ module Twitter
       end
     end
 
+    resource :complex do
+      params do
+        requires :a, type: Hash
+      end
+      get do
+        "hash #{params[:a][:b][:c]}"
+      end
+    end
+
     resource :status do
       params do
         requires :id, type: Integer, desc: "User id."

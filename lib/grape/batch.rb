@@ -3,6 +3,7 @@ require 'grape/batch/log_subscriber'
 require 'grape/batch/version'
 require 'grape/batch/errors'
 require 'grape/batch/configuration'
+require 'grape/batch/hash_converter'
 require 'grape/batch/parser'
 require 'grape/batch/response'
 require 'multi_json'
@@ -75,7 +76,7 @@ module Grape
         rack_input = '{}'
 
         if method == 'GET'
-          query_string = URI.encode_www_form(body.to_a)
+          query_string = URI.encode_www_form(HashConverter.encode(body).to_a)
         else
           rack_input = StringIO.new(MultiJson.encode(body))
         end
