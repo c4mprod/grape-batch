@@ -1,3 +1,6 @@
+# 1.2.0 (23rd July 2015)
+* Removed logging
+
 # 1.1.4 (17th July 2015)
 * Added batch session
 

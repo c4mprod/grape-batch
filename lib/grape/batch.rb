@@ -1,5 +1,4 @@
 require 'active_support'
-require 'grape/batch/log_subscriber'
 require 'grape/batch/version'
 require 'grape/batch/errors'
 require 'grape/batch/configuration'
@@ -24,7 +23,7 @@ module Grape
       def batch_call(env)
         status = 200
         headers = { 'Content-Type' => 'application/json' }
-
+        logger.info('--- Grape::Batch BEGIN')
         begin
           batch_requests = Grape::Batch::Validator::parse(env, Grape::Batch.configuration.limit)
           result = dispatch(env, batch_requests)
@@ -33,7 +32,7 @@ module Grape
           e.class == TooManyRequestsError ? status = 429 : status = 400
           body = e.message
         end
-
+        logger.info('--- Grape::Batch END')
         [status, headers, [body]]
       end
 
@@ -46,25 +45,18 @@ module Grape
       end
 
       def dispatch(env, batch_requests)
-        ActiveSupport::Notifications.instrument 'dispatch.batch' do |event|
-          event[:requests] = []
+        session_data = env[Grape::Batch.configuration.session_header]
+        env['api.session'] = Grape::Batch.configuration.session_proc.call(session_data)
 
-          session_data = env[Grape::Batch.configuration.session_header]
-          env['api.session'] = Grape::Batch.configuration.session_proc.call(session_data)
+        # iterate
+        batch_env = env.dup
+        batch_requests.map do |request|
+          # init env for Grape resource
+          tmp_env = prepare_tmp_env(batch_env, request)
+          status, headers, response = @app.call(tmp_env)
 
-          # iterate
-          batch_env = env.dup
-          batch_requests.map do |request|
-            # init env for Grape resource
-            tmp_env = prepare_tmp_env(batch_env, request)
-            status, headers, response = @app.call(tmp_env)
-
-            # format response
-            @response_klass::format(status, headers, response).tap do |formatted_response|
-              # log call
-              event[:requests] << [tmp_env, formatted_response]
-            end
-          end
+          # format response
+          @response_klass::format(status, headers, response)
         end
       end
 
@@ -86,6 +78,21 @@ module Grape
         tmp_env['QUERY_STRING'] = query_string
         tmp_env['rack.input'] = rack_input
         tmp_env
+      end
+
+      def logger
+        @logger ||= Grape::Batch.configuration.logger || rails_logger || default_logger
+      end
+
+      def default_logger
+        logger = Logger.new($stdout)
+        logger.level = Logger::INFO
+        logger
+      end
+
+      # Get the Rails logger if it's defined.
+      def rails_logger
+        defined?(::Rails) && ::Rails.respond_to?(:logger) && ::Rails.logger
       end
     end
   end
