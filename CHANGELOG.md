@@ -1,5 +1,8 @@
+# 1.2.1 (24rd July 2015)
+* Using env['HTTP_X_REQUEST_ID'] or env['rack-timeout.info'][:id] or generate unique hex to identify request batch
+
 # 1.2.0 (23rd July 2015)
-* Removed logging
+* Removed logging, added batch START and END logs
 
 # 1.1.4 (17th July 2015)
 * Added batch session

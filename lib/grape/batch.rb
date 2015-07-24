@@ -23,7 +23,9 @@ module Grape
       def batch_call(env)
         status = 200
         headers = { 'Content-Type' => 'application/json' }
-        logger.info('--- Grape::Batch BEGIN')
+        rack_timeout_info = env['rack-timeout.info'][:id] if env['rack-timeout.info']
+        request_id = env['HTTP_X_REQUEST_ID'] || rack_timeout_info || SecureRandom.hex
+        logger.info("--- Grape::Batch #{request_id} BEGIN")
         begin
           batch_requests = Grape::Batch::Validator::parse(env, Grape::Batch.configuration.limit)
           result = dispatch(env, batch_requests)
@@ -32,7 +34,7 @@ module Grape
           e.class == TooManyRequestsError ? status = 429 : status = 400
           body = e.message
         end
-        logger.info('--- Grape::Batch END')
+        logger.info("--- Grape::Batch #{request_id} END")
         [status, headers, [body]]
       end
 
