@@ -48,7 +48,6 @@ Grape::Batch.configure do |config|
   config.path = '/batch'
   config.formatter = Grape::Batch::Response
   config.logger = nil
-  config.session_header = 'HTTP_X_SESSION_TOKEN'
   config.session_proc = Proc.new {}
 end
 ```
@@ -101,13 +100,12 @@ POST http request on the default URL with a similar body:
 'body' is optional.
 
 ### Sessions
-It's possible ensure a single session during the execution of the batch. You have to specify your session/token/auth header and your session Proc. Before running the batch, the Proc is executed with the data extracted from the specified session header and stored in rack env 'api.session' key.
+It's possible ensure a single session during the execution of the batch. You have to specify your session Proc. Before running the batch, the Proc is executed (with env as argument) and stored in rack env 'api.session' key.
 ```ruby
 # Example
 # Considering the config
 Grape::Batch.configure do |config|
-  config.session_header = 'HTTP_X_SESSION_TOKEN'
-  config.session_proc = Proc.new {|token| User.where(token: token).first }
+  config.session_proc = Proc.new {|env| User.where(token: env['HTTP_X_TOKEN']).first }
 end
 
 # You can build a Grape helper like this

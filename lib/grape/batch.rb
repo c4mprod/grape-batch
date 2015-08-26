@@ -47,8 +47,7 @@ module Grape
       end
 
       def dispatch(env, batch_requests)
-        session_data = env[Grape::Batch.configuration.session_header]
-        env['api.session'] = Grape::Batch.configuration.session_proc.call(session_data)
+        env['api.session'] = Grape::Batch.configuration.session_proc.call(env)
 
         # iterate
         batch_env = env.dup

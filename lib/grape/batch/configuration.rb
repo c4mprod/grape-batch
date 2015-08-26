@@ -1,14 +1,13 @@
 module Grape
   module Batch
     class Configuration
-      attr_accessor :path, :limit, :formatter, :logger, :session_proc, :session_header
+      attr_accessor :path, :limit, :formatter, :logger, :session_proc
 
       def initialize
         @path = '/batch'
         @limit = 10
         @formatter = Grape::Batch::Response
         @logger = nil
-        @session_header = 'HTTP_X_SESSION_TOKEN'
         @session_proc = Proc.new {}
       end
     end
