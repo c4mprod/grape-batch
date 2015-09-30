@@ -1,6 +1,10 @@
+# 2.0.1 (30th September 2015)
+* Removed obsolete gem dependencies
+* Now ensures the response is properly formatted and not empty, or returns an error
+
 # 2.0.0 (26rd August 2015)
 * Removed session_header from configuration options
-# Now passes the whole env to the session Proc
+* Now passes the whole env to the session Proc
 
 # 1.2.1 (24rd July 2015)
 * Using env['HTTP_X_REQUEST_ID'] or env['rack-timeout.info'][:id] or generate unique hex to identify request batch
