@@ -29,7 +29,7 @@ module Grape
 
         begin
           status = 200
-          batch_requests = Grape::Batch::Validator::parse(env, @batch_size_limit)
+          batch_requests = Grape::Batch::Validator.parse(env, @batch_size_limit)
           result = dispatch(env, batch_requests)
           body = MultiJson.encode(result)
         rescue Grape::Batch::RequestBodyError, Grape::Batch::TooManyRequestsError => e

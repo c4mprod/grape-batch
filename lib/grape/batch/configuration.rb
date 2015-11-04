@@ -1,5 +1,7 @@
 module Grape
+  # Main gem module
   module Batch
+    # Gem configuration
     class Configuration
       attr_accessor :path, :limit, :formatter, :logger, :session_proc
 
@@ -8,7 +10,7 @@ module Grape
         @limit = 10
         @formatter = Grape::Batch::Response
         @logger = nil
-        @session_proc = Proc.new {}
+        @session_proc = proc {}
       end
     end
 

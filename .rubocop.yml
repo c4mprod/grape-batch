@@ -1,0 +1,12 @@
+require: rubocop-rspec
+
+Metrics/LineLength:
+  Max: 99
+
+# Indentation of `when`.
+Style/CaseIndentation:
+  IndentWhenRelativeTo: case
+  SupportedStyles:
+    - case
+    - end
+  IndentOneStep: true

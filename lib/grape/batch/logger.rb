@@ -1,5 +1,6 @@
 module Grape
   module Batch
+    # Main class logger
     class Logger
       def prepare(env)
         rack_timeout_info = env['rack-timeout.info'][:id] if env['rack-timeout.info']
