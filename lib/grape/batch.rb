@@ -57,7 +57,7 @@ module Grape
           status, headers, response = @app.call(tmp_env)
 
           # format response
-          @response_klass::format(status, headers, response, tmp_env)
+          @response_klass::format(status, headers, response)
         end
       end
 

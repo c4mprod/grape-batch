@@ -134,12 +134,6 @@ RSpec.describe Grape::Batch::Base do
         it { expect(response.body).to eq(encode([{ success: 'status 856' }])) }
       end
 
-      context 'with an unknown version' do
-        let(:request_body) { encode({ requests: [{ method: 'GET', path: '/api/v2/status', body: { id: 856 } }] }) }
-        it { expect(response.status).to eq(200) }
-        it { expect(response.body).to eq(encode([{ code: 404, error: '/api/v2/status not found' }])) }
-      end
-
       context 'with a body and nested hash' do
         let(:complex) do
           { a: { b: { c: 1 } } }

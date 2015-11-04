@@ -1,3 +1,6 @@
+# 2.1.0 (4th November 2015)
+* Removed error response format because of unexpected side effects
+
 # 2.0.1 (30th September 2015)
 * Removed obsolete gem dependencies
 * Now ensures the response is properly formatted and not empty, or returns an error
