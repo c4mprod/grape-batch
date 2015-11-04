@@ -3,13 +3,14 @@ module Grape
     class HashConverter
       def self.encode(value, key = nil, out_hash = {})
         case value
-          when Hash  then
-            value.each { |k,v| encode(v, append_key(key,k), out_hash) }
+          when Hash
+            value.each { |k, v| encode(v, append_key(key, k), out_hash) }
             out_hash
-          when Array then
+          when Array
             value.each { |v| encode(v, "#{key}[]", out_hash) }
             out_hash
-          when nil   then ''
+          when nil
+            ''
           else
             out_hash[key] = value
             out_hash

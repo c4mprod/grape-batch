@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rack/test'
-require 'grape/batch'
 require 'grape'
+require 'grape/batch'
 require 'api'
 
 RSpec.describe Grape::Batch::Base do
@@ -135,12 +135,8 @@ RSpec.describe Grape::Batch::Base do
       end
 
       context 'with a body and nested hash' do
-        let(:complex) do
-          { a: { b: { c: 1 } } }
-        end
-        let(:request_body) do
-          encode({ requests: [{ method: 'GET', path: '/api/v1/complex', body: complex}] })
-        end
+        let(:complex) { { a: { b: { c: 1 } } } }
+        let(:request_body) { encode({ requests: [{ method: 'GET', path: '/api/v1/complex', body: complex }] }) }
         it { expect(response.status).to eq(200) }
         it { expect(response.body).to eq(encode([{ success: "hash 1" }])) }
       end
