@@ -9,6 +9,7 @@ require 'multi_json'
 
 module Grape
   module Batch
+    # Gem main class
     class Base
       def initialize(app)
         @app = app
@@ -20,46 +21,44 @@ module Grape
       end
 
       def call(env)
-        return @app.call(env) unless is_batch_request?(env)
+        return @app.call(env) unless batch_request?(env)
+        @logger.prepare(env).batch_begin
         batch_call(env)
       end
 
       def batch_call(env)
-        @logger.prepare(env).batch_begin
-
         begin
           status = 200
           batch_requests = Grape::Batch::Validator.parse(env, @batch_size_limit)
-          result = dispatch(env, batch_requests)
-          body = MultiJson.encode(result)
+          body = MultiJson.encode(dispatch(env, batch_requests))
         rescue Grape::Batch::RequestBodyError, Grape::Batch::TooManyRequestsError => e
           e.class == TooManyRequestsError ? status = 429 : status = 400
           body = e.message
         end
 
         @logger.batch_end
-        Rack::Response.new(body, status, { 'Content-Type' => 'application/json' })
+        Rack::Response.new(body, status, 'Content-Type' => 'application/json')
       end
 
       private
 
-      def is_batch_request?(env)
+      def batch_request?(env)
         env['PATH_INFO'].start_with?(@api_path) &&
           env['REQUEST_METHOD'] == 'POST' &&
           env['CONTENT_TYPE'] == 'application/json'
       end
 
       def dispatch(env, batch_requests)
+        # Call session proc
         env['api.session'] = @session_proc.call(env)
 
-        # iterate
-        batch_env = env.dup
-        batch_requests.map do |request|
-          # init env for Grape resource
-          tmp_env = Grape::Batch::Request.new(batch_env, request).build
-          status, headers, response = @app.call(tmp_env)
+        # Prepare batch request env
+        request_env = env.dup
 
-          # format response
+        # Call batch request
+        batch_requests.map do |batch_request|
+          batch_env = Grape::Batch::Request.new(request_env, batch_request).build
+          status, headers, response = @app.call(batch_env)
           @response_klass.format(status, headers, response)
         end
       end

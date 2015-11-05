@@ -23,7 +23,7 @@ module Twitter
 
     resource :user do
       params do
-        requires :id, type: Integer, desc: "User id."
+        requires :id, type: Integer, desc: 'User id.'
       end
       route_param :id do
         get do
@@ -43,14 +43,14 @@ module Twitter
 
     resource :status do
       params do
-        requires :id, type: Integer, desc: "User id."
+        requires :id, type: Integer, desc: 'User id.'
       end
       get do
         "status #{params[:id]}"
       end
 
       params do
-        requires :id, type: Integer, desc: "User id."
+        requires :id, type: Integer, desc: 'User id.'
       end
       post do
         "status #{params[:id]}"

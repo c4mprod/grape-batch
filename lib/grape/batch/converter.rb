@@ -7,20 +7,17 @@ module Grape
           case value
             when Hash
               value.each { |k, v| encode(v, append_key(key, k), out_hash) }
-              out_hash
             when Array
               value.each { |v| encode(v, "#{key}[]", out_hash) }
-              out_hash
-            when nil
-              ''
             else
               out_hash[key] = value
-              out_hash
           end
+
+          value ? out_hash : ''
         end
 
         def append_key(root_key, key)
-          root_key.nil? ? :"#{key}" : :"#{root_key}[#{key.to_s}]"
+          root_key ? :"#{root_key}[#{key.to_s}]" : :"#{key}"
         end
       end
     end
