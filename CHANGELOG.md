@@ -1,3 +1,6 @@
+# 2.1.1 (5th November 2015)
+* Code refactoring to prepare next features
+
 # 2.1.0 (4th November 2015)
 * Removed error response format because of unexpected side effects
 
