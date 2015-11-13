@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rack/test'
 require 'grape'
-require 'grape/batch'
+require 'grape/base'
 require 'api'
 
 RSpec.describe Grape::Batch::Base do
@@ -175,6 +175,44 @@ RSpec.describe Grape::Batch::Base do
         let(:request_body) { encode(requests: [request_1, request_2]) }
         it { expect(response.status).to eq(200) }
         it { expect(decode(response.body).size).to eq(2) }
+      end
+    end
+
+    describe 'single session' do
+      describe 'without token' do
+        let(:request_1) { { method: 'POST', path: '/api/v1/login' } }
+        let(:request_body) { encode(requests: [request_1]) }
+        it { expect(response.status).to eq(200) }
+        it { expect(response.body).to eq(encode([{ success: 'token invalid' }])) }
+        it { expect(response.headers).to_not include('HTTP_X_API_TOKEN') }
+      end
+
+      describe 'with a token' do
+        let(:request_1) { { method: 'GET', path: '/api/v1/login' } }
+        let(:request_2) { { method: 'POST', path: '/api/v1/login' } }
+        let(:request_body) { encode(requests: [request_1, request_2]) }
+        let(:expected_response) { [{ success: 'login successful' }, { success: 'token valid' }] }
+        it { expect(response.status).to eq(200) }
+        it { expect(response.body).to eq(encode(expected_response)) }
+        it { expect(response.headers).to_not include('HTTP_X_API_TOKEN') }
+      end
+
+      describe 'without session' do
+        let(:request_1) { { method: 'POST', path: '/api/v1/session' } }
+        let(:request_body) { encode(requests: [request_1]) }
+        it { expect(response.status).to eq(200) }
+        it { expect(response.body).to eq(encode([{ success: 'session invalid' }])) }
+        it { expect(response.headers).to_not include('api.session') }
+      end
+
+      describe 'with a session' do
+        let(:request_1) { { method: 'GET', path: '/api/v1/session' } }
+        let(:request_2) { { method: 'POST', path: '/api/v1/session' } }
+        let(:request_body) { encode(requests: [request_1, request_2]) }
+        let(:expected_response) { [{ success: 'session reloaded' }, { success: 'session valid' }] }
+        it { expect(response.status).to eq(200) }
+        it { expect(response.body).to eq(encode(expected_response)) }
+        it { expect(response.headers).to_not include('api.session') }
       end
     end
   end
