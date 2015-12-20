@@ -121,9 +121,6 @@ module AuthHelpers
 end
 ```
 
-# Contributors
-[anothermh](https://github.com/anothermh)
-
 ## Contributing
 
 1. Fork it ( https://github.com/c4mprod/grape-batch/fork )
