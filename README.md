@@ -23,11 +23,12 @@ Or install it yourself as:
 This middleware is intended to be used with JSON Grape::API only.
 
 ### Rails apps
-1. Create an initializer 'config/initializers/grape-batch.rb'
+1. Create an initializer and add you configuration 'config/initializers/grape-batch.rb'
 2. Add the middleware to the stack
 ```ruby
-# grape-batch.rb
+# config/application.rb
 Rails.application.configure do
+ # rest of the file is hidden
  config.middleware.use Grape::Batch::Base
 end
 ```
@@ -119,6 +120,9 @@ module AuthHelpers
   end
 end
 ```
+
+# Contributors
+[anothermh](https://github.com/anothermh)
 
 ## Contributing
 
