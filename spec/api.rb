@@ -75,13 +75,13 @@ module Twitter
 
     resource :session do
       get do
-        header 'api.session', 'user_session'
+        header 'api.session', OpenStruct.new(nick: 'Bob')
 
         'session reloaded'
       end
 
       post do
-        if env['api.session'] == 'user_session'
+        if env['api.session'] && env['api.session'].nick == 'Bob'
           'session valid'
         else
           'session invalid'
