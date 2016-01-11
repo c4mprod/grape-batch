@@ -11,6 +11,9 @@ module Grape
   module Batch
     # Gem main class
     class Base
+      SESSION_HEADER = 'api.session'.freeze
+      TOKEN_HEADER = 'HTTP_X_API_TOKEN'.freeze
+
       def initialize(app)
         @app = app
         @response_klass = Grape::Batch.configuration.formatter
@@ -49,18 +52,31 @@ module Grape
       end
 
       def dispatch(env, batch_requests)
-        # Call session proc
-        env['api.session'] = @session_proc.call(env)
-
         # Prepare batch request env
-        request_env = env.dup
+        @request_env = env.dup
+        # Call session proc
+        @request_env[SESSION_HEADER] = @session_proc.call(@request_env)
 
         # Call batch request
         batch_requests.map do |batch_request|
-          batch_env = Grape::Batch::Request.new(request_env, batch_request).build
+          batch_env = Grape::Batch::Request.new(@request_env, batch_request).build
           status, headers, response = @app.call(batch_env)
+
+          update_request_env_session_from_headers(headers)
+          update_request_env_token_from_headers(headers)
+
           @response_klass.format(status, headers, response)
         end
+      end
+
+      def update_request_env_session_from_headers(headers)
+        return if !headers[SESSION_HEADER] || @request_env[SESSION_HEADER]
+        @request_env[SESSION_HEADER] = headers[SESSION_HEADER].dup
+      end
+
+      def update_request_env_token_from_headers(headers)
+        return if !headers[TOKEN_HEADER] || @request_env[TOKEN_HEADER]
+        @request_env[TOKEN_HEADER] = headers[TOKEN_HEADER].dup
       end
     end
   end

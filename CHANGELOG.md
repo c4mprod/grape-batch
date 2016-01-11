@@ -1,3 +1,6 @@
+# 2.2.0 (13th November 2015)
+* Added authentication during request batch
+
 # 2.1.1 (5th November 2015)
 * Code refactoring to prepare next features
 

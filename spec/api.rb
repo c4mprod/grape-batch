@@ -57,6 +57,38 @@ module Twitter
       end
     end
 
+    resource :login do
+      get do
+        header 'HTTP_X_API_TOKEN', 'user_token'
+
+        'login successful'
+      end
+
+      post do
+        if env['HTTP_X_API_TOKEN'] == 'user_token'
+          'token valid'
+        else
+          'token invalid'
+        end
+      end
+    end
+
+    resource :session do
+      get do
+        header 'api.session', OpenStruct.new(nick: 'Bob')
+
+        'session reloaded'
+      end
+
+      post do
+        if env['api.session'] && env['api.session'].nick == 'Bob'
+          'session valid'
+        else
+          'session invalid'
+        end
+      end
+    end
+
     # 404
     #
     route :any, '*path' do
