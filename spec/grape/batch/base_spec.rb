@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rack/test'
 require 'grape'
-require 'grape/base'
+require 'grape/batch'
 require 'api'
 
 RSpec.describe Grape::Batch::Base do

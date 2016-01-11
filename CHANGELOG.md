@@ -1,4 +1,7 @@
-# 2.2.0 (13th November 2015)
+# 2.2.1 (11th January 2016)
+* Fix main module NameError
+
+# 2.2.0 (11th January 2016)
 * Added authentication during request batch
 
 # 2.1.1 (5th November 2015)
