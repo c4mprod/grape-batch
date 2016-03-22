@@ -71,7 +71,7 @@ module Grape
 
       def update_request_env_session_from_headers(headers)
         return if !headers[SESSION_HEADER] || @request_env[SESSION_HEADER]
-        @request_env[SESSION_HEADER] = headers[SESSION_HEADER].dup
+        @request_env[SESSION_HEADER] = headers[SESSION_HEADER]
       end
 
       def update_request_env_token_from_headers(headers)

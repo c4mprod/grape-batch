@@ -1,3 +1,6 @@
+# 2.2.2 (22nd March 2016)
+* SESSION_HEADER is no longer duplicated because when the header contains an ActiveRecord object or something similar, it changes the object id
+
 # 2.2.1 (11th January 2016)
 * Fix main module NameError
 
