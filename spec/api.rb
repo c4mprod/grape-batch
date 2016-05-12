@@ -59,7 +59,7 @@ module Twitter
 
     resource :login do
       get do
-        header 'HTTP_X_API_TOKEN', 'user_token'
+        request.env['HTTP_X_API_TOKEN'] = 'user_token'
 
         'login successful'
       end
@@ -75,7 +75,7 @@ module Twitter
 
     resource :session do
       get do
-        header 'api.session', OpenStruct.new(nick: 'Bob')
+        request.env['api.session'] = OpenStruct.new(nick: 'Bob')
 
         'session reloaded'
       end

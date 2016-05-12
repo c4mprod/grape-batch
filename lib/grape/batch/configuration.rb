@@ -10,7 +10,7 @@ module Grape
         @limit = 10
         @formatter = Grape::Batch::Response
         @logger = nil
-        @session_proc = proc {}
+        @session_proc = nil
       end
     end
 

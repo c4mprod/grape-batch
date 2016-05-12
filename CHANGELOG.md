@@ -1,3 +1,7 @@
+# 2.3.0 (22nd March 2016)
+* Remove request session and token headers from response headers
+* Code refactor 
+
 # 2.2.2 (22nd March 2016)
 * SESSION_HEADER is no longer duplicated because when the header contains an ActiveRecord object or something similar, it changes the object id
 

@@ -136,13 +136,13 @@ module Twitter
     resource :session do
         get do
             # route logic
-            header 'HTTP_X_API_TOKEN', 'my_fresh_token'
+            request.env['HTTP_X_API_TOKEN'] = 'my_fresh_token'
             # some other logic
         end
     end
 end
 
-# This route will return a token header. The header will be kept and passed to the following requests by Grape::Batch. The header will not be added to the final batch response. 
+# This route will register a token. The header will be kept and passed to the following requests by Grape::Batch. 
 ```
 
 ```ruby
@@ -156,14 +156,14 @@ module Twitter
     
     resource :session do
         get do
-            # route logic
-            header 'api.session', OpenStruct(id: '123456')
+            # route logic            
+            request.env['api.session'] = OpenStruct(id: '123456')
             # some other logic
         end
     end
 end
 
-# This route will return a session object. The header will be kept and passed to the following requests by Grape::Batch. The header will not be added to the final batch response. 
+# This route will return a session object. The session object will be kept and passed to the following requests by Grape::Batch.  
 ```
 
 ## Contributing
