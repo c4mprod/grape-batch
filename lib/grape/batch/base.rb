@@ -22,8 +22,19 @@ module Grape
       end
 
       def batch_call(env)
+        @logger.info('DEBUG ENV')
+        @logger.info(env)
+
+        @logger.info('DEBUG BODY')
+        @logger.info(env['rack.input'].read)
+
         batch_requests = Grape::Batch::Validator.parse(env, Grape::Batch.configuration.limit)
-        [MultiJson.encode(dispatch(env, batch_requests)), 200]
+
+        @logger.info('DEBUG BATCH')
+        @logger.info(batch_requests)
+
+        responses = dispatch(env, batch_requests)
+        [MultiJson.encode(responses), 200]
 
       rescue Grape::Batch::RequestBodyError, Grape::Batch::TooManyRequestsError => e
         [e.message, e.class == TooManyRequestsError ? 429 : 400]
@@ -34,6 +45,10 @@ module Grape
 
         # Call batch request
         batch_requests.map do |batch_request|
+
+          @logger.info('DEBUG REQUEST')
+          @logger.info(batch_request)
+
           batch_env = Grape::Batch::Request.new(env, batch_request).build
           call_batched_request(batch_env)
         end

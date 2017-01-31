@@ -28,6 +28,11 @@ module Grape
         @logger.info("--- Grape::Batch #{@request_id} END")
         self
       end
+
+      def info(message)
+        @logger.info(message)
+        self
+      end
     end
   end
 end
