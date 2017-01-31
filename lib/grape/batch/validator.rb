@@ -5,8 +5,13 @@ module Grape
       ALLOWED_METHODS = %w(GET DELETE PATCH POST PUT)
 
       class << self
-        def parse(env, limit)
-          batch_body = decode_body(env['rack.input'].read)
+        def parse(env, limit, logger = nil)
+          input = env['rack.input'].read
+          if logger
+            logger.info('DEBUG BODY')
+            logger.info(input)
+          end
+          batch_body = decode_body(input)
 
           requests = batch_body['requests']
           validate_batch(requests, limit)

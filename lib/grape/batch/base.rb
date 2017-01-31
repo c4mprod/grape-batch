@@ -25,10 +25,7 @@ module Grape
         @logger.info('DEBUG ENV')
         @logger.info(env)
 
-        @logger.info('DEBUG BODY')
-        @logger.info(env['rack.input'].read)
-
-        batch_requests = Grape::Batch::Validator.parse(env, Grape::Batch.configuration.limit)
+        batch_requests = Grape::Batch::Validator.parse(env, Grape::Batch.configuration.limit, @logger)
 
         @logger.info('DEBUG BATCH')
         @logger.info(batch_requests)
