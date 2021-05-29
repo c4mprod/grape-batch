@@ -18,7 +18,8 @@ module Grape
         @logger.batch_end
 
         # Return Rack formatted response
-        Rack::Response.new(body, status, 'Content-Type' => 'application/json')
+        r = Rack::Response.new(body, status, 'Content-Type' => 'application/json')
+        [r.status, r.headers, r.body]
       end
 
       def batch_call(env)
