@@ -34,6 +34,7 @@ module Grape
         @env['PATH_INFO'] = path
         @env['QUERY_STRING'] = query_string
         @env['rack.input'] = rack_input
+        @env.delete('rack.request.form_hash') if @env.has_key? 'rack.request.form_hash'
         @env
       end
     end
